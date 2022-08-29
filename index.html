@@ -10,34 +10,48 @@
 </head>
 
 <body>
+    <nav>
+        <ul>
+            <li onclick="reset(3)" class="btn">再生成　簡単</li>
+            <li onclick="reset(5)" class="btn">再生成 難しい</li>
+            <li onclick="alert(explain)" class="btn">ルール説明</li>
+        </ul>
+    </nav>
     <!-- 9*9マスの場所　-->
     <div class="wrapper">
         <h1>ナンプレ</h1>
-        <td><input type="button" value="ルール説明" onclick="alert(explain)" class="rule"></td>
+
         <div id="gameBox" class="gameBox"></div>
         <div class="buttonArea" id="buttonArea">
             <table>
                 <tr>
-                <td><input type="button" value="1" onclick="N(1)" id="buttonId1" class="buttons"></td>
-                <td><input type="button" value="2" onclick="N(2)" id="buttonId2" class="buttons"></td>
-                <td><input type="button" value="3" onclick="N(3)" id="buttonId3" class="buttons"></td>
-                <td><input type="button" value="4" onclick="N(4)" id="buttonId4" class="buttons"></td>
-                <td><input type="button" value="5" onclick="N(5)" id="buttonId5" class="buttons"></td>
-                <td><input type="button" value="6" onclick="N(6)" id="buttonId6" class="buttons"></td>
-                <td><input type="button" value="7" onclick="N(7)" id="buttonId7" class="buttons"></td>
-                <td><input type="button" value="8" onclick="N(8)" id="buttonId8" class="buttons"></td>
-                <td><input type="button" value="9" onclick="N(9)" id="buttonId9" class="buttons"></td>
-                <td><input type="button" value="" onclick="N0()" id="eraser" class="eraser"></td>
-            </tr>
+                    <td><input type="button" value="1" onclick="N(1)" id="buttonId1" class="buttons"></td>
+                    <td><input type="button" value="2" onclick="N(2)" id="buttonId2" class="buttons"></td>
+                    <td><input type="button" value="3" onclick="N(3)" id="buttonId3" class="buttons"></td>
+                    <td><input type="button" value="4" onclick="N(4)" id="buttonId4" class="buttons"></td>
+                    <td><input type="button" value="5" onclick="N(5)" id="buttonId5" class="buttons"></td>
+                    <td><input type="button" value="6" onclick="N(6)" id="buttonId6" class="buttons"></td>
+                    <td><input type="button" value="7" onclick="N(7)" id="buttonId7" class="buttons"></td>
+                    <td><input type="button" value="8" onclick="N(8)" id="buttonId8" class="buttons"></td>
+                    <td><input type="button" value="9" onclick="N(9)" id="buttonId9" class="buttons"></td>
+                    <td><input type="button" value="" onclick="N0()" id="eraser" class="eraser"></td>
+                </tr>
             </table>
-            </div>
-            <input type="button" value="再生成     簡単" onclick="reset(3);">
-            <input type="button" value="再生成  難しい" onclick="reset(5);">
+        </div>
+        <div class="buttonArea2">
+            <table>
+                <tr>
+                    <td><input type="button" value="魔法のボタン" onclick="magicButton()" id="buttonId10" class="buttons3">
+                    </td>
+                </tr>
+            </table>
+        </div>
     </div>
-        
+
     <div id="square-template" class="square">
         <div class="number"></div>
     </div>
+    <script src="function.js"></script>
     <script src="nanpureMain.js"></script>
 </body>
 
