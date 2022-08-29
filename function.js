@@ -1,3 +1,5 @@
+const gameBox = document.getElementById("gameBox");
+const squareTemplate = document.getElementById("square-template");
 //入力する数字
 let boxNumber = [];
 //reset時に色を戻すよう
