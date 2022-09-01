@@ -1,32 +1,24 @@
-const gameBox = document.getElementById("gameBox");
-const squareTemplate = document.getElementById("square-template");
 //入力する数字
 let boxNumber = [];
 //reset時に色を戻すよう
 let RBlist = [];
-//前に何のボタンを押したか保持
-let t = [];
 //背景を初期の色に
 function boxColor() {
     for (let i = 0; i < 81; i++) {
         let defaultState;
         let a = (Math.floor(i / 9));//商
         let b = (Math.floor(i % 9));//余り
-        if (a === 0 || a === 1 || a === 2 || a === 6 || a === 7 || a === 8) {
-            if (b === 0 || b === 1 || b === 2 || b === 6 || b === 7 || b === 8) {
-                defaultState = 1;
-                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", defaultState)
+        if (Math.floor(a / 3) !== 1) {
+            if (Math.floor(b / 3) !== 1) {
+                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", 1)
             } else {
-                defaultState = 2;
-                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", defaultState)
+                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", 2)
             }
         } else {
-            if (b === 3 || b === 4 || b === 5) {
-                defaultState = 1;
-                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", defaultState)
+            if (Math.floor(b / 3) === 1) {
+                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", 1)
             } else {
-                defaultState = 2;
-                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", defaultState)
+                document.querySelector(`[data-index='${i}']`).setAttribute("data-state", 2)
             }
         }
     }
@@ -34,16 +26,16 @@ function boxColor() {
 function nanpureCreate() {
     let flag = true;
     //順番を混ぜる
-function lineCreate(line) {
-    for (let i = (line.length - 1); 0 < i; i--) {
-        let r = Math.floor(Math.random() * (i + 1));
-        let tmp = line[i];
-        line[i] = line[r];
-        line[r] = tmp;
+    function lineCreate(line) {
+        for (let i = (line.length - 1); 0 < i; i--) {
+            let r = Math.floor(Math.random() * (i + 1));
+            let tmp = line[i];
+            line[i] = line[r];
+            line[r] = tmp;
 
+        }
+        return line;
     }
-    return line;
-}
     while (flag) {
         //完成用
         let createBoxNumber = [[], [], [], [], [], [], [], [], []];
@@ -75,15 +67,7 @@ function lineCreate(line) {
         heightLine[0] = createBoxNumber[0]
         for (let i = 0; i < 9; i++) {
             tmpNumber0[i] = tmpNumber0[i].concat(createBoxNumber[0][i])
-            if (Math.floor(i / 3) === 0) {
-                box33[0] = box33[0].concat(createBoxNumber[0][i])
-            }
-            if (Math.floor(i / 3) === 1) {
-                box33[1] = box33[1].concat(createBoxNumber[0][i])
-            }
-            if (Math.floor(i / 3) === 2) {
-                box33[2] = box33[2].concat(createBoxNumber[0][i])
-            }
+            box33[Math.floor(i / 3)] = box33[Math.floor(i / 3)].concat(createBoxNumber[0][i])
         }
         let bp;
         let totalAll = 45;
@@ -91,41 +75,7 @@ function lineCreate(line) {
             for (let i = 0; i < 9; i++) {
                 let tmpA = []
                 let tmpBox;
-
-                //どのマスのかで分ける
-                if (Math.floor(j / 3) === 0) {
-                    if (Math.floor(i / 3) === 0) {
-                        tmpBox = box33[0];
-                    }
-                    if (Math.floor(i / 3) === 1) {
-                        tmpBox = box33[1];
-                    }
-                    if (Math.floor(i / 3) === 2) {
-                        tmpBox = box33[2];
-                    }
-                }
-                if (Math.floor(j / 3) === 1) {
-                    if (Math.floor(i / 3) === 0) {
-                        tmpBox = box33[3];
-                    }
-                    if (Math.floor(i / 3) === 1) {
-                        tmpBox = box33[4]
-                    }
-                    if (Math.floor(i / 3) === 2) {
-                        tmpBox = box33[5]
-                    }
-                }
-                if (Math.floor(j / 3) === 2) {
-                    if (Math.floor(i / 3) === 0) {
-                        tmpBox = box33[6];
-                    }
-                    if (Math.floor(i / 3) === 1) {
-                        tmpBox = box33[7]
-                    }
-                    if (Math.floor(i / 3) === 2) {
-                        tmpBox = box33[8]
-                    }
-                }
+                tmpBox = box33[Math.floor(j / 3) * 3 + Math.floor(i / 3)]
                 //使われていない数字を探す
                 inBox((tmpNumber0[i].concat(heightLine[j], tmpBox)), tmpA)
                 let tmpB = lineCreate(tmpA);
@@ -137,40 +87,7 @@ function lineCreate(line) {
                 //縦・横・３×３用の配列に入れる
                 heightLine[j] = heightLine[j].concat(tmpB[0])
                 tmpNumber0[i] = tmpNumber0[i].concat(tmpB[0])
-                if (Math.floor(j / 3) === 0) {
-                    if (Math.floor(i / 3) === 0) {
-                        box33[0] = box33[0].concat(tmpB[0])
-                    }
-                    if (Math.floor(i / 3) === 1) {
-                        box33[1] = box33[1].concat(tmpB[0])
-                    }
-                    if (Math.floor(i / 3) === 2) {
-                        box33[2] = box33[2].concat(tmpB[0])
-                    }
-                }
-                if (Math.floor(j / 3) === 1) {
-                    if (Math.floor(i / 3) === 0) {
-                        box33[3] = box33[3].concat(tmpB[0])
-                    }
-                    if (Math.floor(i / 3) === 1) {
-                        box33[4] = box33[4].concat(tmpB[0])
-                    }
-                    if (Math.floor(i / 3) === 2) {
-                        box33[5] = box33[5].concat(tmpB[0])
-                    }
-                }
-                if (Math.floor(j / 3) === 2) {
-                    if (Math.floor(i / 3) === 0) {
-                        box33[6] = box33[6].concat(tmpB[0])
-                    }
-                    if (Math.floor(i / 3) === 1) {
-                        box33[7] = box33[7].concat(tmpB[0])
-                    }
-                    if (Math.floor(i / 3) === 2) {
-                        box33[8] = box33[8].concat(tmpB[0])
-                    }
-                }
-
+                box33[Math.floor(j / 3) * 3 + Math.floor(i / 3)] = box33[Math.floor(j / 3) * 3 + Math.floor(i / 3)].concat(tmpB[0])
                 //トータルにたす
                 totalAll += tmpB[0]
                 //9個目なら完成用の配列に入れる
@@ -201,22 +118,25 @@ function answerAbCreate() {
     }
     return answerA = answera, nanpureA = []; //問題作成用
 };
-//　level × 9 消す
+//　問題作成　level × 9個消す
 function mondai(level) {
+    //正解の配列を保存
     for (let i = 0; i < 81; i++) {
         let a = (Math.floor(i / 9));//商
         let b = (Math.floor(i % 9));//余り
         nanpureA.push(nanpureNumber[a][b]);
     }
+    //消した数の確認用
     let pt1 = 0; let pt2 = 0; let pt3 = 0; let pt4 = 0; let pt5 = 0; let pt6 = 0; let pt7 = 0; let pt8 = 0; let pt9 = 0;
     let flag = true
     while (flag) {
         let pt = pt1 + pt2 + pt3 + pt4 + pt5 + pt6 + pt7 + pt8 + pt9;
-        if (pt === (level * 9)) {
-            break;
-        }
-        a = Math.floor(Math.random() * (80 + 1 - 0)) + 0;
+            if (pt === (level * 9)) {
+                break;
+            }
+        a = Math.floor(Math.random() * (81));
         //b = Math.floor( Math.random() * (8 + 1 - 0) ) + 0 ;
+
         if (nanpureA[a] !== []) {
             if (nanpureA[a] === 1) {
                 if (pt1 !== level) {
@@ -290,9 +210,17 @@ function mondai(level) {
                     continue;
                 }
             }
+            /**
+            if (spacePt[nanpureA[a]] !== level){
+                spacePt[nanpureA[a]] =  spacePt[nanpureA[a]] + 1;
+                nanpureA[a] = [];
+            }else {
+                continue;
+            }
+            */
         }
     }
-    return magicLimit = level, magicPoint = 0;
+    return magicLimit = level, magicPoint = 0, colorIdNumber = 11;
 };
 //ボックス作成
 const createSquares = () => {
@@ -336,57 +264,21 @@ const createSquares = () => {
 //消しゴム用
 function N0() {
     boxNumber = []
+    //前に押したボタンの色を変える
+    if (colorIdNumber === 0) {
+        document.getElementById('eraser').classList.remove('eraser2');
+        document.getElementById('eraser').classList.add('eraser');
+    }else if(10 > colorIdNumber) {
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
+    }
+    if (colorIdNumber === 10) {
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
+    }
+    colorIdNumber = 0;
     document.getElementById('eraser').classList.remove('eraser');
     document.getElementById('eraser').classList.add('eraser2');
-    //前に押したボタンの色を変える
-    if (t >= 0) {
-        if (t === 0) {
-            document.getElementById('eraser').classList.remove('eraser2');
-            document.getElementById('eraser').classList.add('eraser');
-        }
-        if (t === 1) {
-            document.getElementById('buttonId1').classList.remove('buttons2');
-            document.getElementById('buttonId1').classList.add('buttons');
-        }
-        if (t === 2) {
-            document.getElementById('buttonId2').classList.remove('buttons2');
-            document.getElementById('buttonId2').classList.add('buttons');
-        }
-        if (t === 3) {
-            document.getElementById('buttonId3').classList.remove('buttons2');
-            document.getElementById('buttonId3').classList.add('buttons');
-        }
-        if (t === 4) {
-            document.getElementById('buttonId4').classList.remove('buttons2');
-            document.getElementById('buttonId4').classList.add('buttons');
-        }
-        if (t === 5) {
-            document.getElementById('buttonId5').classList.remove('buttons2');
-            document.getElementById('buttonId5').classList.add('buttons');
-        }
-        if (t === 6) {
-            document.getElementById('buttonId6').classList.remove('buttons2');
-            document.getElementById('buttonId6').classList.add('buttons');
-        }
-        if (t === 7) {
-            document.getElementById('buttonId7').classList.remove('buttons2');
-            document.getElementById('buttonId7').classList.add('buttons');
-        }
-        if (t === 8) {
-            document.getElementById('buttonId8').classList.remove('buttons2');
-            document.getElementById('buttonId8').classList.add('buttons');
-        }
-        if (t === 9) {
-            document.getElementById('buttonId9').classList.remove('buttons2');
-            document.getElementById('buttonId9').classList.add('buttons');
-        }
-        if (t === 10) {
-            document.getElementById('buttonId10').classList.remove('buttons4');
-            document.getElementById('buttonId10').classList.add('buttons3');
-        }
-    }
-    t = 0;
-
     boxColor()
 }
 //ボタン用
@@ -402,522 +294,45 @@ function N(Num) {
             document.querySelector(`[data-index='${b}']`).setAttribute("data-state", 3)
         }
     }
-    //ボタンを押したときに色を変える
-    if (boxNumber === 1) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId1').classList.remove('buttons');
-        document.getElementById('buttonId1').classList.add('buttons2');
-        t = 1
+    //前と今押したボタン色変えと保存
+    if (colorIdNumber === 0) {
+        document.getElementById('eraser').classList.remove('eraser2');
+        document.getElementById('eraser').classList.add('eraser');
+    }else if(10 > colorIdNumber) {
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
     }
-    if (boxNumber === 2) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId2').classList.remove('buttons');
-        document.getElementById('buttonId2').classList.add('buttons2');
-        t = 2
+    if (colorIdNumber === 10) {
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
     }
-    if (boxNumber === 3) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId3').classList.remove('buttons');
-        document.getElementById('buttonId3').classList.add('buttons2');
-        t = 3
-    }
-    if (boxNumber === 4) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId4').classList.remove('buttons');
-        document.getElementById('buttonId4').classList.add('buttons2');
-        t = 4
-    }
-    if (boxNumber === 5) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId5').classList.remove('buttons');
-        document.getElementById('buttonId5').classList.add('buttons2');
-        t = 5
-    }
-    if (boxNumber === 6) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId6').classList.remove('buttons');
-        document.getElementById('buttonId6').classList.add('buttons2');
-        t = 6
-    }
-    if (boxNumber === 7) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId7').classList.remove('buttons');
-        document.getElementById('buttonId7').classList.add('buttons2');
-        t = 7
-    }
-    if (boxNumber === 8) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId8').classList.remove('buttons');
-        document.getElementById('buttonId8').classList.add('buttons2');
-        t = 8
-    }
-    if (boxNumber === 9) {
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
-        }
-        document.getElementById('buttonId9').classList.remove('buttons');
-        document.getElementById('buttonId9').classList.add('buttons2');
-        t = 9
-    }
+    colorIdNumber = boxNumber
+    document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons');
+    document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons2');
 }
 //魔法のボタン用
 function magicButton() {
     if (magicLimit > magicPoint) {
         boxNumber = 10;
-        if (t >= 0) {
-            if (t === 0) {
-                document.getElementById('eraser').classList.remove('eraser2');
-                document.getElementById('eraser').classList.add('eraser');
-            }
-            if (t === 1) {
-                document.getElementById('buttonId1').classList.remove('buttons2');
-                document.getElementById('buttonId1').classList.add('buttons');
-            }
-            if (t === 2) {
-                document.getElementById('buttonId2').classList.remove('buttons2');
-                document.getElementById('buttonId2').classList.add('buttons');
-            }
-            if (t === 3) {
-                document.getElementById('buttonId3').classList.remove('buttons2');
-                document.getElementById('buttonId3').classList.add('buttons');
-            }
-            if (t === 4) {
-                document.getElementById('buttonId4').classList.remove('buttons2');
-                document.getElementById('buttonId4').classList.add('buttons');
-            }
-            if (t === 5) {
-                document.getElementById('buttonId5').classList.remove('buttons2');
-                document.getElementById('buttonId5').classList.add('buttons');
-            }
-            if (t === 6) {
-                document.getElementById('buttonId6').classList.remove('buttons2');
-                document.getElementById('buttonId6').classList.add('buttons');
-            }
-            if (t === 7) {
-                document.getElementById('buttonId7').classList.remove('buttons2');
-                document.getElementById('buttonId7').classList.add('buttons');
-            }
-            if (t === 8) {
-                document.getElementById('buttonId8').classList.remove('buttons2');
-                document.getElementById('buttonId8').classList.add('buttons');
-            }
-            if (t === 9) {
-                document.getElementById('buttonId9').classList.remove('buttons2');
-                document.getElementById('buttonId9').classList.add('buttons');
-            }
-            if (t === 10) {
-                document.getElementById('buttonId10').classList.remove('buttons4');
-                document.getElementById('buttonId10').classList.add('buttons3');
-            }
+        if (colorIdNumber === 0) {
+            document.getElementById('eraser').classList.remove('eraser2');
+            document.getElementById('eraser').classList.add('eraser');
+        }else if(10 > colorIdNumber) {
+            document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
+            document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
         }
-        document.getElementById('buttonId10').classList.remove('buttons3');
-        document.getElementById('buttonId10').classList.add('buttons4');
-        t = 10
-        boxColor();
+        if (colorIdNumber === 10) {
+            document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
+            document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
+        }
+        colorIdNumber = boxNumber
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons');
+        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons2');
     }
+    colorIdNumber = boxNumber;
+    document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons3');
+    document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons4');
+    boxColor();
 }
 //クリック時に
 const onClickSquare = (index) => {
@@ -973,55 +388,22 @@ const onClickSquare = (index) => {
                         magicPoint++;
                         if (magicLimit === magicPoint) {
                             boxNumber = [];
-                            if (t >= 0) {
-                                if (t === 0) {
-                                    document.getElementById('eraser').classList.remove('eraser2');
-                                    document.getElementById('eraser').classList.add('eraser');
-                                }
-                                if (t === 1) {
-                                    document.getElementById('buttonId1').classList.remove('buttons2');
-                                    document.getElementById('buttonId1').classList.add('buttons');
-                                }
-                                if (t === 2) {
-                                    document.getElementById('buttonId2').classList.remove('buttons2');
-                                    document.getElementById('buttonId2').classList.add('buttons');
-                                }
-                                if (t === 3) {
-                                    document.getElementById('buttonId3').classList.remove('buttons2');
-                                    document.getElementById('buttonId3').classList.add('buttons');
-                                }
-                                if (t === 4) {
-                                    document.getElementById('buttonId4').classList.remove('buttons2');
-                                    document.getElementById('buttonId4').classList.add('buttons');
-                                }
-                                if (t === 5) {
-                                    document.getElementById('buttonId5').classList.remove('buttons2');
-                                    document.getElementById('buttonId5').classList.add('buttons');
-                                }
-                                if (t === 6) {
-                                    document.getElementById('buttonId6').classList.remove('buttons2');
-                                    document.getElementById('buttonId6').classList.add('buttons');
-                                }
-                                if (t === 7) {
-                                    document.getElementById('buttonId7').classList.remove('buttons2');
-                                    document.getElementById('buttonId7').classList.add('buttons');
-                                }
-                                if (t === 8) {
-                                    document.getElementById('buttonId8').classList.remove('buttons2');
-                                    document.getElementById('buttonId8').classList.add('buttons');
-                                }
-                                if (t === 9) {
-                                    document.getElementById('buttonId9').classList.remove('buttons2');
-                                    document.getElementById('buttonId9').classList.add('buttons');
-                                }
-                                if (t === 10) {
-                                    document.getElementById('buttonId10').classList.remove('buttons4');
-                                    document.getElementById('buttonId10').classList.add('buttons3');
-                                }
+                            //前に選択していたボタンの色もどし
+                            if (colorIdNumber === 0) {
+                                document.getElementById('eraser').classList.remove('eraser2');
+                                document.getElementById('eraser').classList.add('eraser');
                             }
-                            t = [];
-                            document.getElementById('buttonId10').classList.remove('buttons3');
-                            document.getElementById('buttonId10').classList.add('noneButton');
+                            if (10 > colorIdNumber > 0) {
+                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
+                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
+                            }
+                            if (colorIdNumber === 10) {
+                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
+                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
+                            }
+                            document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons3');
+                            document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('noneButton');
+                            colorIdNumber = [];
                         }
                     }
                 }
