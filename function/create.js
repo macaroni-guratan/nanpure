@@ -125,7 +125,7 @@ function answerAbCreate() {
     return answerA = answera, nanpureA = []; //問題作成用
 };
 //　問題作成　level × 9個消す
-function mondai(level) {
+function question(level) {
     //正解の配列を保存
     for (let i = 0; i < 81; i++) {
         let a = (Math.floor(i / 9));//商
@@ -133,109 +133,34 @@ function mondai(level) {
         nanpureA.push(nanpureNumber[a][b]);
     }
     //消した数の確認用
-    let pt1 = 0; let pt2 = 0; let pt3 = 0; let pt4 = 0; let pt5 = 0; let pt6 = 0; let pt7 = 0; let pt8 = 0; let pt9 = 0;
-    //let spacePt = [[0],[0],[0],[0],[0],[0],[0],[0],[0]]
+    let spacePt = [[], [], [], [], [], [], [], [], []]
     let flag = true
     while (flag) {
-        let pt = pt1 + pt2 + pt3 + pt4 + pt5 + pt6 + pt7 + pt8 + pt9;
-        //let pt = 0;
-        /** 
-         * 
-         for(let j = 0; j < 9; j++){
-             pt = pt + spacePt[j];
+    pt = 0;
+            a = Math.floor(Math.random() * (81));
+            //空白ではない時
+            if (nanpureA[a].length !== 0) {
+                //上限以下か？
+                if (spacePt[nanpureA[a] - 1].length !== level) {
+                    spacePt[nanpureA[a] - 1].push(0)
+                    nanpureA[a] = [];
+                } else {
+                    continue;
+                }
             }
-            */
-        if (pt === (level * 9)) {
-            break;
-        }
-        a = Math.floor(Math.random() * (81));
-        //b = Math.floor( Math.random() * (8 + 1 - 0) ) + 0 ;
+            if (nanpureA[a].length === 0) {
+                let pt = 0;
+                for (let j = 0; j < 9; j++) {
+                    pt += spacePt[j].length;
+                }
+                if (pt === (level * 9)) {
+                    break;
+                }
+            }
 
-        if (nanpureA[a] !== []) {
-            if (nanpureA[a] === 1) {
-                if (pt1 !== level) {
-                    nanpureA[a] = [];
-                    pt1++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 2) {
-                if (pt2 !== level) {
-                    nanpureA[a] = [];
-                    pt2++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 3) {
-                if (pt3 !== level) {
-                    nanpureA[a] = [];
-                    pt3++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 4) {
-                if (pt4 !== level) {
-                    nanpureA[a] = [];
-                    pt4++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 5) {
-                if (pt5 !== level) {
-                    nanpureA[a] = [];
-                    pt5++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 6) {
-                if (pt6 !== level) {
-                    nanpureA[a] = [];
-                    pt6++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 7) {
-                if (pt7 !== level) {
-                    nanpureA[a] = [];
-                    pt7++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 8) {
-                if (pt8 !== level) {
-                    nanpureA[a] = [];
-                    pt8++;
-                } else {
-                    continue;
-                }
-            }
-            if (nanpureA[a] === 9) {
-                if (pt9 !== level) {
-                    nanpureA[a] = [];
-                    pt9++;
-                } else {
-                    continue;
-                }
-            }
-            /**
-            if (spacePt[nanpureA[a]] !== level){
-                spacePt[nanpureA[a]] =  spacePt[nanpureA[a]] + 1;
-                nanpureA[a] = [];
-            }else {
-                continue;
-            }
-            */
-        }
-    }
-    return magicLimit = level, magicPoint = 0, colorIdNumber = 11;
-};
+    };
+    return magicLimit = level, magicPoint = 0, colorIdNumber = 0, point = spacePt;
+}
 //ボックス作成
 const createSquares = () => {
     for (let i = 0; i < 81; i++) {
@@ -269,7 +194,7 @@ function reset(level) {
     nanpureA = [];
     nanpureCreate();
     answerAbCreate();
-    mondai(level);
+    question(level);
     for (let i = 0; i < 81; i++) {
         document.querySelector(`[data-index='${i}']`).innerHTML = `<p>${[]}</p>`;
         document.querySelector(`[data-index='${i}']`).innerHTML = `<p>${nanpureA[i]}</p>`;

@@ -4,7 +4,7 @@ explain = ("ルール       デフォルト難易度　簡単\nどの横の列�
 
 nanpureCreate();
 answerAbCreate();
-mondai(3);
+question(3);
 createSquares();
 N(1);
 window.onload = () => {
