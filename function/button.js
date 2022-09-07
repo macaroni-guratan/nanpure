@@ -1,7 +1,5 @@
-//消しゴム用
-function N0() {
-    boxNumber = []
-    //前に押したボタンの色を変える
+//前回押したボタンの色もどし
+function colorBack() {
     if (colorIdNumber === 0) {
         document.getElementById('eraser').classList.remove('eraser2');
         document.getElementById('eraser').classList.add('eraser');
@@ -13,6 +11,12 @@ function N0() {
         document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
         document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
     }
+}
+//消しゴム用
+function N0() {
+    boxNumber = []
+    //前に押したボタンの色を変える
+    colorBack();
     colorIdNumber = 0;
     document.getElementById('eraser').classList.remove('eraser');
     document.getElementById('eraser').classList.add('eraser2');
@@ -31,18 +35,8 @@ function N(Num) {
             document.querySelector(`[data-index='${b}']`).setAttribute("data-state", 3)
         }
     }
-    //前と今押したボタン色変えと保存
-    if (colorIdNumber === 0) {
-        document.getElementById('eraser').classList.remove('eraser2');
-        document.getElementById('eraser').classList.add('eraser');
-    } else if (10 > colorIdNumber) {
-        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
-        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
-    }
-    if (colorIdNumber === 10) {
-        document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
-        document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
-    }
+    //前回と今押したボタン色変えと保存
+    colorBack();
     colorIdNumber = boxNumber
     document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons');
     document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons2');
@@ -51,17 +45,7 @@ function N(Num) {
 function magicButton() {
     if (magicLimit > magicPoint) {
         boxNumber = 10;
-        if (colorIdNumber === 0) {
-            document.getElementById('eraser').classList.remove('eraser2');
-            document.getElementById('eraser').classList.add('eraser');
-        } else if (10 > colorIdNumber) {
-            document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
-            document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
-        }
-        if (colorIdNumber === 10) {
-            document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
-            document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
-        }
+        colorBack();
         colorIdNumber = boxNumber
         document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons');
         document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons2');
@@ -70,6 +54,21 @@ function magicButton() {
     document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons3');
     document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons4');
     boxColor();
+}
+//クリア確認
+function clear(){
+    let totalC = 0;
+    for (let i = 0; i < 81; i++) {
+        totalC += nanpureA[i];
+        if ((i + 1) % 9 === 0) {
+            if (totalC % 45 !== 0) {
+                break
+            }
+        }
+        if (totalC === 405) {
+            alert('clear');
+        }
+    }
 }
 //クリック時に
 const onClickSquare = (index) => {
@@ -105,37 +104,15 @@ const onClickSquare = (index) => {
                         }
 
                         //全部埋まっていて正解の場合に
-                        let totalC = 0;
-                        for (let i = 0; i < 81; i++) {
-                            totalC += nanpureA[i];
-                            if ((i + 1) % 9 === 0) {
-                                if (totalC % 45 !== 0) {
-                                    break
-                                }
-                            }
-                            if (totalC === 405) {
-                                confirm('clear');
-                            }
-                        }
+                        clear();
                         alert(`使用可能回数　残り${magicLimit - magicPoint - 1}回`)
                         boxColor();
                         magicPoint++;
                         //使用上限
                         if (magicLimit === magicPoint) {
                             boxNumber = [];
-                            //前に選択していたボタンの色もどし
-                            if (colorIdNumber === 0) {
-                                document.getElementById('eraser').classList.remove('eraser2');
-                                document.getElementById('eraser').classList.add('eraser');
-                            }
-                            if (10 > colorIdNumber > 0) {
-                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons2');
-                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons');
-                            }
-                            if (colorIdNumber === 10) {
-                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons4');
-                                document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('buttons3');
-                            }
+                            //前回に選択していたボタンの色もどし
+                            colorBack();
                             document.getElementById('buttonId' + `${colorIdNumber}`).classList.remove('buttons3');
                             document.getElementById('buttonId' + `${colorIdNumber}`).classList.add('noneButton');
                             colorIdNumber = 1;
@@ -153,18 +130,7 @@ const onClickSquare = (index) => {
                     //答えのリストに入れる
                     nanpureA[index] = boxNumber
                     //全部埋まっていて正解の場合に
-                    let totalC = 0;
-                    for (let i = 0; i < 81; i++) {
-                        totalC += nanpureA[i];
-                        if ((i + 1) % 9 === 0) {
-                            if (totalC % 45 !== 0) {
-                                break
-                            }
-                        }
-                        if (totalC === 405) {
-                            confirm('clear');
-                        }
-                    }
+                    clear();
                     //正解のリストと入力する数字が同じではない場合
                 } else {
                     //答えのリストと正解のリストが同じではない場合

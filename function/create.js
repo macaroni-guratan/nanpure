@@ -5,7 +5,6 @@ let RBlist = [];
 //背景を初期の色に
 function boxColor() {
     for (let i = 0; i < 81; i++) {
-        let defaultState;
         let a = (Math.floor(i / 9));//商
         let b = (Math.floor(i % 9));//余り
         if (Math.floor(a / 3) !== 1) {
@@ -136,33 +135,35 @@ function question(level) {
     let spacePt = [[], [], [], [], [], [], [], [], []]
     let flag = true
     while (flag) {
-    pt = 0;
-            a = Math.floor(Math.random() * (81));
-            //空白ではない時
-            if (nanpureA[a].length !== 0) {
-                //上限以下か？
-                if (spacePt[nanpureA[a] - 1].length !== level) {
-                    spacePt[nanpureA[a] - 1].push(0)
-                    nanpureA[a] = [];
-                } else {
-                    continue;
-                }
+        pt = 0;
+        a = Math.floor(Math.random() * (81));
+        //空白ではない時
+        if (nanpureA[a].length !== 0) {
+            //上限以下か？
+            if (spacePt[nanpureA[a] - 1].length !== level) {
+                spacePt[nanpureA[a] - 1].push(0)
+                nanpureA[a] = [];
+            } else {
+                continue;
             }
-            if (nanpureA[a].length === 0) {
-                let pt = 0;
-                for (let j = 0; j < 9; j++) {
-                    pt += spacePt[j].length;
-                }
-                if (pt === (level * 9)) {
-                    break;
-                }
+        }
+        if (nanpureA[a].length === 0) {
+            let pt = 0;
+            for (let j = 0; j < 9; j++) {
+                pt += spacePt[j].length;
             }
+            if (pt === (level * 9)) {
+                break;
+            }
+        }
 
     };
     return magicLimit = level, magicPoint = 0, colorIdNumber = 0, point = spacePt;
 }
 //ボックス作成
 const createSquares = () => {
+    const gameBox = document.getElementById("gameBox");
+    const squareTemplate = document.getElementById("square-template");
     for (let i = 0; i < 81; i++) {
         const square = squareTemplate.cloneNode(true); //テンプレートから要素をクローン
         square.removeAttribute("id"); //テンプレート用のid属性を削除

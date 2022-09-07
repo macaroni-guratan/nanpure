@@ -1,5 +1,4 @@
-*,
-*::before,
+*,*::before,
 *::after {
   box-sizing: border-box;
 }
@@ -157,14 +156,14 @@ body {
   display: block;
   width: 40px;
   height: 40px;
-  background: rgba(185, 237, 248, 1) url(./gazou/eraser.png) center / 40px auto;
+  background: rgba(185, 237, 248, 1) url(./img/eraser.png) center / 40px auto;
 }
 
 .eraser2 {
   display: block;
   width: 40px;
   height: 40px;
-  background: rgb(164, 212, 31) url(./gazou/eraser.png) center / 40px auto;
+  background: rgb(164, 212, 31) url(./img/eraser.png) center / 40px auto;
 }
 
 nav {
