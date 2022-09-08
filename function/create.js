@@ -22,8 +22,9 @@ function boxColor() {
         }
     }
 };
+// 正解の配列を作成
 function nanpureCreate() {
-    let flag = true;
+    const number = [1, 2, 3, 4, 5, 6, 7, 8, 9];
     //順番を混ぜる
     function lineCreate(line) {
         for (let i = (line.length - 1); 0 < i; i--) {
@@ -35,36 +36,36 @@ function nanpureCreate() {
         }
         return line;
     }
+    //９までで入っていない数字を返す
+    function inBox(line, box) {
+        for (let i = 1; i < 10; i++) {
+            if (line.indexOf(i) === -1) {
+                box.push(i)
+            }
+        }
+    };
+    //順番をランダムに
+    function lineCreate(line) {
+        for (let i = (line.length - 1); 0 < i; i--) {
+            let r = Math.floor(Math.random() * (i + 1));
+            let tmp = line[i];
+            line[i] = line[r];
+            line[r] = tmp;
+        }
+        return line;
+    }
+    firstNumber = lineCreate(number);
+    let flag = true;
     while (flag) {
         //完成用
-        let createBoxNumber = [[], [], [], [], [], [], [], [], []];
+        let createBoxNumber = [firstNumber, [], [], [], [], [], [], [], []];
         //横用
         let tmpNumber0 = [[], [], [], [], [], [], [], [], []];
         //縦用
         let heightLine = [[], [], [], [], [], [], [], [], []];
         //3 * 3 のボックス用
         let box33 = [[], [], [], [], [], [], [], [], []];
-        const number = [1, 2, 3, 4, 5, 6, 7, 8, 9];
-        //９までで入っていない数字を返す
-        function inBox(line, box) {
-            for (let i = 1; i < 10; i++) {
-                if (line.indexOf(i) === -1) {
-                    box.push(i)
-                }
-            }
-        };
-        //順番をランダムに
-        function lineCreate(line) {
-            for (let i = (line.length - 1); 0 < i; i--) {
-                let r = Math.floor(Math.random() * (i + 1));
-                let tmp = line[i];
-                line[i] = line[r];
-                line[r] = tmp;
-            }
-            return line;
-        }
         //1行目
-        createBoxNumber[0] = createBoxNumber[0].concat(lineCreate(number));
         heightLine[0] = createBoxNumber[0]
         //縦用のに入れる
         for (let i = 0; i < 9; i++) {
@@ -72,19 +73,20 @@ function nanpureCreate() {
             box33[Math.floor(i / 3)] = box33[Math.floor(i / 3)].concat(createBoxNumber[0][i])
         }
         let bp;
-        //全ての数字をたす
-        let totalAll = 45;
         //2~9行目
         for (let j = 1; j < 9; j++) {
             for (let i = 0; i < 9; i++) {
                 let tmpA = [] //候補用
                 let tmpBox;
+                //入力位置把握用
+                let whileNumberJ = Math.floor(j / 3)
+                let whileNumberI = Math.floor(i / 3)
                 //同じ箱
-                tmpBox = box33[Math.floor(j / 3) * 3 + Math.floor(i / 3)]
+                tmpBox = box33[whileNumberJ * 3 + whileNumberI]
                 //使われていない数字を探す
                 inBox((tmpNumber0[i].concat(heightLine[j], tmpBox)), tmpA)
                 let tmpB = lineCreate(tmpA);
-                // ランダムで決めていくと9個目が被ってしまう場合があるから
+                // 候補の中からランダムで決めていくと9個目が被ってしまう場合があるので
                 if (isNaN(tmpB[0])) {
                     bp = 0;
                     break;
@@ -92,9 +94,7 @@ function nanpureCreate() {
                 //縦・横・３×３用の配列に入れる
                 heightLine[j] = heightLine[j].concat(tmpB[0])
                 tmpNumber0[i] = tmpNumber0[i].concat(tmpB[0])
-                box33[Math.floor(j / 3) * 3 + Math.floor(i / 3)] = box33[Math.floor(j / 3) * 3 + Math.floor(i / 3)].concat(tmpB[0])
-                //トータルにたす
-                totalAll += tmpB[0]
+                box33[whileNumberJ * 3 + whileNumberI] = box33[whileNumberJ * 3 + whileNumberI].concat(tmpB[0])
                 //9個目なら完成用の配列に入れる
                 if (i === 8) {
                     createBoxNumber[j] = createBoxNumber[j].concat(heightLine[j])
@@ -105,15 +105,15 @@ function nanpureCreate() {
                 bp = [];
                 break
             }
+            if (j === 8) {
+                //完成をしたものを返す
+                return nanpureNumber = createBoxNumber;
+            }
         };
-        //完成していたら終わらせる
-        if (totalAll === 405) {
-            return nanpureNumber = createBoxNumber, tmpNumber = tmpNumber0, widthLine = heightLine, allTotal = totalAll, box9 = box33;
-        }
     };
 };
-//答えを保存
-function answerAbCreate() {
+//正解のリストを作成　
+function answerCreate() {
     let answera = [];
 
     for (let i = 0; i < 81; i++) {
@@ -121,11 +121,11 @@ function answerAbCreate() {
         b = (Math.floor(i % 9));
         answera.push(nanpureNumber[a][b]);
     }
-    return answerA = answera, nanpureA = []; //問題作成用
+    return answerNumber = answera, nanpureA = []; //問題作成用
 };
 //　問題作成　level × 9個消す
 function question(level) {
-    //正解の配列を保存
+    //正解の配列の形を変える
     for (let i = 0; i < 81; i++) {
         let a = (Math.floor(i / 9));//商
         let b = (Math.floor(i % 9));//余り
@@ -158,7 +158,7 @@ function question(level) {
         }
 
     };
-    return magicLimit = level, magicPoint = 0, colorIdNumber = 0, point = spacePt;
+    return magicLimit = level, magicPoint = 0, colorIdNumber = 0;
 }
 //ボックス作成
 const createSquares = () => {
@@ -171,7 +171,7 @@ const createSquares = () => {
 
         const number = square.querySelector('.number');
 
-        //目標をつける
+        //目印をつける
         number.setAttribute("data-index", i);
         //問題を入力
         document.querySelector(`[data-index='${i}']`).innerHTML = `<p>${nanpureA[i]}</p>`;
@@ -185,6 +185,7 @@ const createSquares = () => {
 };
 //再生成
 function reset(level) {
+    //色を剥がす
     if (RBlist.length !== 0) {
         for (let i = 0; i < RBlist.length; i++) {
             document.querySelector(`[data-index='${RBlist[i]}']`).classList.remove('redColor', 'DColor')
@@ -194,12 +195,13 @@ function reset(level) {
     boxColor();
     nanpureA = [];
     nanpureCreate();
-    answerAbCreate();
+    answerCreate();
     question(level);
     for (let i = 0; i < 81; i++) {
         document.querySelector(`[data-index='${i}']`).innerHTML = `<p>${[]}</p>`;
         document.querySelector(`[data-index='${i}']`).innerHTML = `<p>${nanpureA[i]}</p>`;
     }
+    //魔法のボタン表示
     document.getElementById('buttonId10').classList.remove('noneButton');
     document.getElementById('buttonId10').classList.add('buttons3');
     N(1);

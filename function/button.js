@@ -57,15 +57,15 @@ function magicButton() {
 }
 //クリア確認
 function clear(){
-    let totalC = 0;
+    let total = 0;
     for (let i = 0; i < 81; i++) {
-        totalC += nanpureA[i];
+        total += nanpureA[i];
         if ((i + 1) % 9 === 0) {
-            if (totalC % 45 !== 0) {
+            if (total % 45 !== 0) {
                 break
             }
         }
-        if (totalC === 405) {
+        if (total === 405) {
             alert('clear');
         }
     }
@@ -74,41 +74,43 @@ function clear(){
 const onClickSquare = (index) => {
     //入力するのが空白の場合
     if (isNaN(boxNumber)) {
-        //答えのリストと正解のリストが同じではない場合
-        if (answerA[index] !== nanpureA[index]) {
+        
+        // 消しゴム用　クリック位置の正解のリストと答えのリストが同じではない場合　空白を入力
+        if (answerNumber[index] !== nanpureA[index]) {
             document.querySelector(`[data-index='${index}']`).innerHTML = `<p>${boxNumber}</p>`;
         }
         //入力するのが数字の場合
     } else {
-        //答えのリストに数字が入っていない場合
+        //入力する位置の答えのリストが空白の場合
         if (!isNaN(nanpureA[index])) {
-            if (nanpureA[index] !== answerA[index]) {
-                //魔法のボタン
+            if (nanpureA[index] !== answerNumber[index]) {
+                //魔法のボタン用
                 if (boxNumber === 10) {
                     //使用回数以下なのか
                     if (magicLimit > magicPoint) {
                         document.querySelector(`[data-index='${index}']`).classList.add('DColor');
+                        //再生時にclassを剥がすよう
                         RBlist.push(index);
                         document.querySelector(`[data-index='${index}']`).classList.remove('redColor');
-                        document.querySelector(`[data-index='${index}']`).innerHTML = `<p>${answerA[index]}</p>`;
+                        document.querySelector(`[data-index='${index}']`).innerHTML = `<p>${answerNumber[index]}</p>`;
                         //答えのリストに入れる
-                        nanpureA[index] = answerA[index]
+                        nanpureA[index] = answerNumber[index]
 
                         boxColor();
                         for (let i = 0; i < 9; i++) {
-                            a = nanpureNumber[i].indexOf(answerA[index])
+                            a = nanpureNumber[i].indexOf(answerNumber[index])
                             b = 9 * i + a
                             if (nanpureA[b].length !== 0) {
                                 document.querySelector(`[data-index='${b}']`).setAttribute("data-state", 3)
                             }
                         }
 
-                        //全部埋まっていて正解の場合に
+                        //クリアか？
                         clear();
                         alert(`使用可能回数　残り${magicLimit - magicPoint - 1}回`)
                         boxColor();
                         magicPoint++;
-                        //使用上限
+                        //使用上限の確認
                         if (magicLimit === magicPoint) {
                             boxNumber = [];
                             //前回に選択していたボタンの色もどし
@@ -121,7 +123,7 @@ const onClickSquare = (index) => {
                     }
                 }
                 //正解のリストと入力する数字が同じ場合
-                if (answerA[index] === boxNumber) {
+                if (answerNumber[index] === boxNumber) {
                     document.querySelector(`[data-index='${index}']`).classList.add('DColor');
                     RBlist.push(index);
                     document.querySelector(`[data-index='${index}']`).classList.remove('redColor');
@@ -134,7 +136,8 @@ const onClickSquare = (index) => {
                     //正解のリストと入力する数字が同じではない場合
                 } else {
                     //答えのリストと正解のリストが同じではない場合
-                    if (answerA[index] !== nanpureA[index]) {
+                    if (answerNumber[index] !== nanpureA[index]) {
+                        //赤くする
                         document.querySelector(`[data-index='${index}']`).classList.add('redColor')
                         document.querySelector(`[data-index='${index}']`).innerHTML = `<p>${boxNumber}</p>`;
                         RBlist.push(index);
