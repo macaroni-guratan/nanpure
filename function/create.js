@@ -185,6 +185,7 @@ const createSquares = () => {
 };
 //再生成
 function reset(level) {
+    colorBack();
     //色を剥がす
     if (RBlist.length !== 0) {
         for (let i = 0; i < RBlist.length; i++) {
